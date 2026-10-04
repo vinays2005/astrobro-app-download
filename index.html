@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AstroBro — Your Vedic Astrology Companion</title>
+  <meta name="description" content="AI-powered Vedic astrology app. Get your Kundali, Nakshatra insights, Mahadasha predictions and more. Download free for Android." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #EA580C;
+      --amber: #D97706;
+      --orange-light: #FFF7ED;
+      --orange-mid: #FEF3E2;
+      --bg: #FFFAF5;
+      --card: #FFFFFF;
+      --border: #FDE8CC;
+      --text: #1C1208;
+      --text-sec: #78634A;
+      --text-muted: #A8927A;
+      --grad: linear-gradient(135deg, #EA580C 0%, #D97706 100%);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+      background: rgba(255,250,245,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 36px; height: 36px;
+      background: var(--grad);
+      border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 18px;
+    }
+    .nav-logo-text { font-size: 18px; font-weight: 800; color: var(--text); }
+    .nav-cta {
+      background: var(--grad);
+      color: white;
+      border: none; cursor: pointer;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 700; font-size: 13px;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .85; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(234,88,12,.12) 0%, transparent 70%),
+        var(--bg);
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: 'ॐ';
+      position: absolute; font-size: 400px; font-weight: 900;
+      color: rgba(234,88,12,.04);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none; user-select: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--orange-mid); border: 1px solid var(--border);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 12px; font-weight: 700; color: var(--orange);
+      letter-spacing: .4px; margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 7vw, 68px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -1.5px;
+      max-width: 700px;
+    }
+    .hero h1 span { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p {
+      font-size: clamp(15px, 2.5vw, 18px);
+      color: var(--text-sec); max-width: 520px;
+      line-height: 1.6; margin: 18px 0 36px;
+    }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--grad); color: white;
+      padding: 16px 30px; border-radius: 14px;
+      font-weight: 800; font-size: 15px;
+      text-decoration: none; transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 8px 24px rgba(234,88,12,.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(234,88,12,.4); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: white; color: var(--text);
+      padding: 16px 28px; border-radius: 14px;
+      font-weight: 700; font-size: 15px;
+      text-decoration: none; border: 1.5px solid var(--border);
+      transition: border-color .15s;
+    }
+    .btn-secondary:hover { border-color: var(--orange); }
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 56px;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 28px; font-weight: 900; color: var(--orange); }
+    .stat-lbl { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      display: inline-block;
+      font-size: 11px; font-weight: 800; letter-spacing: 1px;
+      color: var(--orange); text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section-title { font-size: clamp(24px, 4vw, 40px); font-weight: 900; line-height: 1.2; }
+    .section-sub { color: var(--text-sec); margin-top: 10px; font-size: 15px; line-height: 1.6; max-width: 500px; }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px; margin-top: 40px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .feature-card:hover {
+      border-color: var(--orange);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(234,88,12,.1);
+    }
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--grad); border-radius: 12px;
+      display: grid; place-items: center;
+      font-size: 20px; margin-bottom: 14px;
+    }
+    .feature-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .feature-card p { font-size: 13px; color: var(--text-sec); line-height: 1.5; }
+
+    /* ── PRICING ── */
+    .pricing-section { background: var(--orange-light); }
+    .pricing-wrap { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px; margin-top: 40px;
+    }
+    .plan-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 18px; padding: 24px;
+      position: relative; transition: all .2s;
+    }
+    .plan-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(234,88,12,.15); }
+    .plan-card.popular {
+      border-color: var(--orange);
+      box-shadow: 0 8px 24px rgba(234,88,12,.2);
+    }
+    .plan-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--grad); color: white;
+      font-size: 10px; font-weight: 900; letter-spacing: .5px;
+      padding: 4px 12px; border-radius: 100px;
+    }
+    .plan-emoji { font-size: 28px; margin-bottom: 10px; }
+    .plan-name { font-size: 18px; font-weight: 900; }
+    .plan-desc { font-size: 12px; color: var(--text-muted); margin: 4px 0 16px; }
+    .plan-price { font-size: 36px; font-weight: 900; color: var(--orange); }
+    .plan-price span { font-size: 14px; font-weight: 600; color: var(--text-muted); }
+    .plan-saving {
+      display: inline-block;
+      background: rgba(22,163,74,.12);
+      color: #16A34A;
+      font-size: 10px; font-weight: 800;
+      padding: 2px 8px; border-radius: 4px;
+      margin-top: 4px;
+    }
+    .plan-cta {
+      display: block; text-align: center;
+      margin-top: 20px;
+      background: var(--grad); color: white;
+      padding: 12px; border-radius: 10px;
+      font-weight: 800; font-size: 13px;
+      text-decoration: none; transition: opacity .2s;
+    }
+    .plan-cta:hover { opacity: .85; }
+    .plan-cta.outline {
+      background: white; color: var(--orange);
+      border: 2px solid var(--orange);
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 24px; margin-top: 40px; }
+    .step { text-align: center; }
+    .step-num {
+      width: 48px; height: 48px;
+      background: var(--grad); border-radius: 14px;
+      display: grid; place-items: center;
+      font-size: 20px; font-weight: 900; color: white;
+      margin: 0 auto 14px;
+    }
+    .step h3 { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .step p { font-size: 13px; color: var(--text-sec); line-height: 1.5; }
+
+    /* ── DOWNLOAD CTA ── */
+    .download-section {
+      text-align: center;
+      background: var(--grad);
+      padding: 80px 24px;
+      position: relative; overflow: hidden;
+    }
+    .download-section::before {
+      content: '☀'; font-size: 300px;
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      opacity: .06; pointer-events: none;
+    }
+    .download-section h2 { font-size: clamp(28px,5vw,48px); font-weight: 900; color: white; }
+    .download-section p { color: rgba(255,255,255,.8); margin: 12px 0 32px; font-size: 16px; }
+    .btn-white {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: white; color: var(--orange);
+      padding: 16px 32px; border-radius: 14px;
+      font-weight: 800; font-size: 15px;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2);
+      transition: transform .15s;
+    }
+    .btn-white:hover { transform: translateY(-2px); }
+    .file-note { color: rgba(255,255,255,.6); font-size: 12px; margin-top: 14px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1C1208;
+      color: rgba(255,255,255,.5);
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 13px;
+    }
+    footer .footer-logo { font-size: 22px; font-weight: 900; color: white; margin-bottom: 8px; }
+    footer a { color: rgba(255,255,255,.5); text-decoration: none; }
+    footer a:hover { color: var(--orange); }
+    .footer-links { display: flex; gap: 20px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
+
+    /* ── FAQ ── */
+    .faq { margin-top: 40px; }
+    .faq-item {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 12px; margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%; text-align: left;
+      padding: 16px 20px;
+      font-size: 14px; font-weight: 700;
+      background: none; border: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--text);
+    }
+    .faq-q:hover { background: var(--orange-mid); }
+    .faq-a {
+      display: none;
+      padding: 0 20px 16px;
+      font-size: 13px; color: var(--text-sec); line-height: 1.6;
+    }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-icon { transition: transform .2s; font-size: 18px; color: var(--orange); }
+
+    /* ── CHAT WIDGET ── */
+    #chat-fab {
+      position: fixed; right: 18px; bottom: 18px; z-index: 200;
+      width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer;
+      background: var(--grad); color: #fff; font-size: 24px;
+      box-shadow: 0 8px 24px rgba(234,88,12,.4); transition: transform .15s;
+    }
+    #chat-fab:hover { transform: scale(1.07); }
+    #chat-panel {
+      position: fixed; right: 18px; bottom: 86px; z-index: 200;
+      width: min(360px, calc(100vw - 36px)); height: min(480px, calc(100vh - 120px));
+      background: var(--card); border: 1.5px solid var(--border); border-radius: 18px;
+      box-shadow: 0 16px 48px rgba(28,18,8,.25);
+      display: none; flex-direction: column; overflow: hidden;
+    }
+    #chat-panel.open { display: flex; }
+    .chat-head { background: var(--grad); color: #fff; padding: 14px 16px; }
+    .chat-head b { font-size: 15px; font-weight: 800; display: block; }
+    .chat-head span { font-size: 11px; opacity: .85; }
+    #chat-log { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
+    .msg { max-width: 85%; padding: 9px 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; }
+    .msg.bot { background: #fff; border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .msg.me { background: var(--orange); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .chat-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 14px 0; background: var(--bg); }
+    .chat-chips button {
+      font: inherit; font-size: 11px; font-weight: 700; color: var(--orange);
+      background: #fff; border: 1.5px solid var(--border); border-radius: 100px; padding: 5px 10px; cursor: pointer;
+    }
+    .chat-chips button:hover { border-color: var(--orange); }
+    #chat-form { display: flex; gap: 8px; padding: 10px 14px; background: var(--bg); border-top: 1px solid var(--border); }
+    #chat-input { flex: 1; font: inherit; font-size: 13px; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; outline: none; }
+    #chat-input:focus { border-color: var(--orange); }
+    #chat-form button { border: none; background: var(--grad); color: #fff; font-weight: 800; padding: 0 16px; border-radius: 10px; cursor: pointer; }
+
+    @media (max-width: 600px) {
+      .hero-stats { gap: 24px; }
+      .btn-primary, .btn-secondary { padding: 14px 22px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">☀️</div>
+    <span class="nav-logo-text">AstroBro</span>
+  </a>
+  <a class="nav-cta" href="#download">Download Free</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">🌟 Vedic Astrology · AI-Powered</div>
+  <h1>Know Your <span>Destiny</span><br/>Through the Stars</h1>
+  <p>AstroBro gives you a complete Vedic birth chart, Nakshatra readings, Mahadasha predictions and an AI Jyotish assistant — all in your pocket.</p>
+  <div class="hero-btns">
+    <a class="btn-primary" href="#download">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download APK
+    </a>
+    <a class="btn-secondary" href="#features">See Features</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">10</div><div class="stat-lbl">Free Chats/Day</div></div>
+    <div class="stat"><div class="stat-num">20</div><div class="stat-lbl">Divisional Charts</div></div>
+    <div class="stat"><div class="stat-num">₹49</div><div class="stat-lbl">Plans Start At</div></div>
+    <div class="stat"><div class="stat-num">Lahiri</div><div class="stat-lbl">Ayanamsa · Swiss Ephemeris</div></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Features</div>
+  <h2 class="section-title">Everything your Kundali needs</h2>
+  <p class="section-sub">From birth chart calculations to AI-powered life predictions — AstroBro has it all.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🪐</div>
+      <h3>Complete Kundali</h3>
+      <p>Full birth chart with all planets, houses, and aspects calculated using classical Vedic rules.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✨</div>
+      <h3>20 Divisional Charts (D1–D60)</h3>
+      <p>Navamsa, Dasamsa and every other Varga chart up to D60 for deep analysis of each life area.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI Jyotish Chat</h3>
+      <p>Ask anything about your chart and get answers grounded in your specific planetary positions.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌙</div>
+      <h3>Nakshatra & Mahadasha</h3>
+      <p>Moon Nakshatra, Pada, and current Mahadasha / Antardasha analysis at a glance.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📖</div>
+      <h3>Yogas & Doshas</h3>
+      <p>Automatic detection of auspicious yogas (Raj, Dhana, Gaja Kesari) and key Doshas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>PDF Kundali Report</h3>
+      <p>Download your birth chart, planetary positions and dasha summary as a formatted PDF.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👥</div>
+      <h3>Multiple Profiles</h3>
+      <p>Save and switch between charts for family members, friends, or compatibility readings.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Daily Notifications</h3>
+      <p>Receive a personalised cosmic nudge every morning based on your chart.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-label">How it works</div>
+  <h2 class="section-title">Your chart in 3 steps</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Enter Birth Details</h3>
+      <p>Name, date, time and place of birth. AstroBro handles the timezone and coordinates automatically.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Instant Calculation</h3>
+      <p>Your Kundali is calculated in seconds using our Vedic astrology engine on the backend.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Explore & Ask</h3>
+      <p>Browse your chart, switch divisional charts, and ask the AI any question about your life.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<div class="pricing-section" id="pricing">
+  <div class="pricing-wrap">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Affordable plans for every seeker</h2>
+    <p class="section-sub">Start free with 10 AI chats per day. Upgrade when you're ready.</p>
+    <div class="pricing-grid">
+
+      <div class="plan-card">
+        <div class="plan-emoji">✨</div>
+        <div class="plan-name">Spark</div>
+        <div class="plan-desc">7-day full access</div>
+        <div class="plan-price">₹49 <span>/ week</span></div>
+        <a class="plan-cta outline" href="#download">Download App</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-emoji">🌙</div>
+        <div class="plan-name">Core</div>
+        <div class="plan-desc">30-day premium</div>
+        <div class="plan-price">₹149 <span>/ month</span></div>
+        <a class="plan-cta outline" href="#download">Download App</a>
+      </div>
+
+      <div class="plan-card popular">
+        <div class="plan-badge">⭐ POPULAR</div>
+        <div class="plan-emoji">⭐</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-desc">90 days — best pick</div>
+        <div class="plan-price">₹399 <span>/ quarter</span></div>
+        <div class="plan-saving">SAVE 11%</div>
+        <a class="plan-cta" href="#download">Download App</a>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-emoji">🔥</div>
+        <div class="plan-name">Elite</div>
+        <div class="plan-desc">Full year — best deal</div>
+        <div class="plan-price">₹999 <span>/ year</span></div>
+        <div class="plan-saving">SAVE 72%</div>
+        <a class="plan-cta outline" href="#download">Download App</a>
+      </div>
+
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--text-muted)">
+      All paid plans unlock unlimited AI chat and remove ads. Kundali, divisional charts and Panchang are free for everyone.<br/>
+      One-time payments (no auto-renewal) via Razorpay — UPI, cards and net banking accepted.
+    </p>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-label">FAQ</div>
+  <h2 class="section-title">Common questions</h2>
+  <div class="faq">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is AstroBro free to use? <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Yes! AstroBro is free to download. Your Kundali, divisional charts and Panchang are free, and you get 10 AI Jyotish chat messages per day. After that you can upgrade — plans start at just ₹49 — for unlimited chat and no ads.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How do I install the APK on my phone? <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Download the APK file from the button below. Before installing, go to Settings → Security → Enable "Install from Unknown Sources" (or "Install unknown apps"). Then open the downloaded APK file and tap Install.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is it safe to install an APK outside the Play Store? <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">This APK is signed with our release key and downloaded straight from this site. We plan to publish on Google Play soon. You can compare the SHA-256 checksum shown in the download section with the file you received to confirm it was not altered.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How accurate is the Vedic chart calculation? <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">AstroBro uses Swiss Ephemeris — the same high-precision engine used by professional Jyotish software worldwide. It accounts for true sidereal positions using the Lahiri ayanamsa standard.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can I use it for family members too? <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Yes! AstroBro supports multiple profiles. Save charts for your family, friends or anyone whose birth details you have, and switch between them instantly.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How do I cancel my subscription? <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">AstroBro plans are one-time payments for the selected duration — not auto-renewing subscriptions. When your plan expires you simply go back to the free tier. See our <a href="refund.html" style="color:var(--orange)">Refund Policy</a> for payment issues.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD CTA -->
+<div class="download-section" id="download">
+  <h2>Download AstroBro Free</h2>
+  <p>Android APK · 40 MB · No Play Store needed</p>
+  <a class="btn-white" href="AstroBro.apk" download>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download APK
+  </a>
+  <p class="file-note">Requires Android 7.0 or newer  ·  Allow "Install unknown apps" in Settings</p>
+  <p class="file-note" style="word-break:break-all">SHA-256: <code>5f500da6690c4ce1dc897f73c0af5c30e95f95096bc7d6606a95c5a97462737d</code></p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">☀️ AstroBro</div>
+  <p>AI-powered Vedic astrology for everyone</p>
+  <div class="footer-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="#download">Download</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms</a>
+    <a href="refund.html">Refunds</a>
+  </div>
+  <p>© 2026 AstroBro · Made with ❤️ in India</p>
+</footer>
+
+<!-- CHAT WIDGET -->
+<button id="chat-fab" aria-label="Open chat" title="Chat with AstroBro">💬</button>
+<div id="chat-panel" role="dialog" aria-label="AstroBro chat">
+  <div class="chat-head"><b>AstroBro Help</b><span>Quick answers about the app, plans and install</span></div>
+  <div id="chat-log" aria-live="polite"></div>
+  <div class="chat-chips" id="chat-chips"></div>
+  <form id="chat-form" autocomplete="off">
+    <input id="chat-input" type="text" maxlength="200" placeholder="Ask a question…" aria-label="Your question" />
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+  // ── Chat widget: built-in FAQ assistant (no server, no secrets in this page) ──
+  // To use a live-chat service instead, create a free Tawk.to property and paste
+  // "PROPERTY_ID/WIDGET_ID" here — the built-in widget then steps aside.
+  const TAWK_EMBED = "";
+  // Optional: shown in answers for questions the assistant can't handle.
+  const SUPPORT_EMAIL = "";
+
+  const KB = [
+    { k: ["price","plan","cost","₹","rupee","pay","spark","core","pro","elite","cheap"],
+      a: "Plans are one-time payments: Spark ₹49 (7 days), Core ₹149 (30 days), Pro ₹399 (90 days) and Elite ₹999 (1 year). They unlock unlimited AI chat and remove ads. Payments go through Razorpay (UPI, cards, net banking)." },
+    { k: ["free","limit","10","message","chat","daily","how many"],
+      a: "Free users get 10 AI Jyotish chat messages per day. Your Kundali, divisional charts and Panchang are free. After the daily limit you can upgrade from ₹49 for unlimited chat." },
+    { k: ["install","apk","download","android","unknown","how do i","setup"],
+      a: "Tap Download APK, open the file, and if Android asks, allow \"Install unknown apps\" for your browser (Settings → Apps → Special access). Then tap Install and open AstroBro." },
+    { k: ["safe","virus","trust","secure","legit","checksum","sha"],
+      a: "The APK is signed with our release key. Compare the SHA-256 checksum in the download section with your downloaded file to confirm it is unchanged. We plan to publish on Google Play soon." },
+    { k: ["play store","playstore","google play"],
+      a: "We plan to publish on Google Play soon. Until then you can install directly from this site." },
+    { k: ["ios","iphone","apple","ipad"],
+      a: "AstroBro is Android-only for now." },
+    { k: ["kundali","kundli","birth","chart","horoscope","lagna"],
+      a: "Enter your name, date, time and place of birth and AstroBro calculates your Vedic birth chart (Lahiri ayanamsa, Swiss Ephemeris) with planets, houses, Nakshatra, Yogas, Doshas and Dasha periods." },
+    { k: ["divisional","varga","navamsa","d9","d10","d60"],
+      a: "AstroBro has 20 divisional charts from D1 to D60, including Navamsa (D9) for marriage and Dasamsa (D10) for career." },
+    { k: ["pdf","report","download report"],
+      a: "You can download your Kundali as a PDF from the Report section of the app." },
+    { k: ["ad","ads","advert","remove ads","no ads"],
+      a: "Ads appear only after you use your 10 free daily chats. Any paid plan removes ads." },
+    { k: ["refund","money back","failed","deducted","payment issue","cancel"],
+      a: "Plans are one-time payments with no auto-renewal, so there is nothing to cancel. If a payment failed or money was deducted without a plan being activated, see the Refund Policy page (link in the footer)." },
+    { k: ["accurate","accuracy","ayanamsa","lahiri","ephemeris"],
+      a: "Calculations use the Swiss Ephemeris with the Lahiri (Chitrapaksha) ayanamsa, the standard for Vedic astrology. Accuracy depends on an accurate birth time and place." },
+    { k: ["privacy","data","location","delete"],
+      a: "We store your birth details and chat history to power your readings. See the Privacy Policy (footer) for details." },
+    { k: ["contact","support","email","help","human"],
+      a: SUPPORT_EMAIL ? "You can email us at " + SUPPORT_EMAIL + "." : "Live support isn't set up yet — please check the FAQ above, which covers most questions." },
+    { k: ["hi","hello","hey","namaste"],
+      a: "Namaste! Ask me about plans, installing the app, free limits or how the Kundali works." },
+  ];
+  const CHIPS = ["How much do plans cost?", "How do I install?", "What's free?", "Is it safe?"];
+
+  function answer(q) {
+    const s = q.toLowerCase();
+    let best = null, bestScore = 0;
+    // Short words ("ad", "pro", "10") must match as whole words, not inside "download"/"problem".
+    const hit = w => (w.length <= 3 && /^\w+$/.test(w)) ? new RegExp("\\b" + w + "\\b").test(s) : s.includes(w);
+    for (const e of KB) {
+      const score = e.k.reduce((n, w) => n + (hit(w) ? 1 : 0), 0);
+      if (score > bestScore) { best = e; bestScore = score; }
+    }
+    return best ? best.a : "I'm not sure about that one. I can help with plans & pricing, installing the app, free limits, Kundali features and payments.";
+  }
+
+  if (TAWK_EMBED) {
+    document.getElementById("chat-fab").style.display = "none";
+    const s = document.createElement("script");
+    s.async = true; s.src = "https://embed.tawk.to/" + TAWK_EMBED; s.charset = "UTF-8";
+    s.setAttribute("crossorigin", "*");
+    document.head.appendChild(s);
+  } else {
+    const fab = document.getElementById("chat-fab");
+    const panel = document.getElementById("chat-panel");
+    const log = document.getElementById("chat-log");
+    const input = document.getElementById("chat-input");
+    const chips = document.getElementById("chat-chips");
+    function add(text, who) {
+      const d = document.createElement("div");
+      d.className = "msg " + who; d.textContent = text;
+      log.appendChild(d); log.scrollTop = log.scrollHeight;
+    }
+    function ask(q) {
+      const t = q.trim(); if (!t) return;
+      add(t, "me"); setTimeout(() => add(answer(t), "bot"), 250);
+    }
+    CHIPS.forEach(c => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = c;
+      b.addEventListener("click", () => ask(c)); chips.appendChild(b);
+    });
+    add("Namaste! 🙏 I can answer questions about plans, installing the app and how AstroBro works.", "bot");
+    fab.addEventListener("click", () => {
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open")) input.focus();
+    });
+    document.getElementById("chat-form").addEventListener("submit", e => {
+      e.preventDefault(); ask(input.value); input.value = "";
+    });
+  }
+</script>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    item.classList.toggle('open');
+  }
+
+  // Smooth scroll offset for fixed nav
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      const y = target.getBoundingClientRect().top + window.scrollY - 70;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
