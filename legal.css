@@ -7,7 +7,11 @@ h1{font-size:30px;margin-bottom:6px}
 .updated{color:#A8927A;font-size:13px;margin-bottom:26px}
 h2{font-size:18px;margin:28px 0 8px;color:#EA580C}
 p,li{font-size:15px;color:#3b2f1f}
-ul{margin:8px 0 8px 22px}
+ul,ol{margin:8px 0 8px 22px}
+li{margin:4px 0}
+h3{font-size:16px;margin:18px 0 6px}
+.note{background:#FFF1E6;border:1.5px solid #FDBA74;border-radius:10px;padding:12px 14px;margin:14px 0;font-size:15px}
+mark.missing{background:#FEF3C7;border:1px dashed #D97706;border-radius:4px;padding:0 4px;color:#92400E}
 a{color:#EA580C}
 .todo{background:#FEF3C7;border:1.5px dashed #D97706;border-radius:10px;padding:10px 14px;margin:14px 0;font-size:14px}
 footer{text-align:center;padding:24px;color:#A8927A;font-size:13px}
