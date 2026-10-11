@@ -1,6 +1,6 @@
-# AstroBro website
+# Astrobro.ai website
 
-Static landing page for the AstroBro Android app: features, plans, FAQ, a built-in help chat widget,
+Static landing page for the Astrobro.ai Android app: features, plans, FAQ, a built-in help chat widget,
 privacy/terms/refund pages, and the signed APK download.
 
 ## Deploy (Netlify)
