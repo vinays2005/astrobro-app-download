@@ -677,6 +677,11 @@
     } catch (_) {}
   }
 
+  // One count per page load, for the admin dashboard's "Website visits" card.
+  try {
+    fetch('https://astrobro-backend.onrender.com/api/public/site-visits/track', { method: 'POST', keepalive: true });
+  } catch (_) {}
+
   function toggleFaq(btn) {
     const item = btn.closest('.faq-item');
     item.classList.toggle('open');
