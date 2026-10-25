@@ -11,14 +11,21 @@ The APK itself is NOT committed to this repo — it lives as a GitHub Release as
 history small; a binary that changes every release doesn't belong in it).
 
 ## Releasing a new APK
-1. Build: `flutter build apk --release --dart-define=BACKEND_API_KEY=...`
-2. Create a release with the APK attached:
-   `gh release create vX.Y.Z build/app/outputs/flutter-apk/app-release.apk --repo vinays2005/astrobro-app-download --title "Astrobro.ai vX.Y.Z" --notes "..."`
-3. Update the download link in `index.html` to the new release's asset URL
-   (`https://github.com/vinays2005/astrobro-app-download/releases/download/vX.Y.Z/AstrobroAI.apk`).
-4. Update the SHA-256 shown in `index.html` (`sha256sum app-release.apk`) and the size, then commit and push.
-5. Publish the new version code/name/URL in the admin dashboard's **Updates** tab so the in-app update
-   screen picks it up.
+1. Bump `version:` in the Flutter project's `pubspec.yaml` (the `+N` build number is what the in-app
+   update screen compares against; it must go up).
+2. Build: `flutter build apk --release --dart-define=BACKEND_API_KEY=...` (or `./build_release.sh`,
+   which reads the key from the backend's `.env` for you).
+3. Create a release with the APK attached, **keeping the asset named `AstrobroAI.apk`** — every URL that
+   points at a release (`index.html`'s download button, and the admin dashboard's default APK URL) uses
+   GitHub's evergreen `/releases/latest/download/AstrobroAI.apk` alias, which only resolves correctly
+   when every release's asset keeps that exact filename:
+   `gh release create vX.Y.Z AstrobroAI.apk --repo vinays2005/astrobro-app-download --title "AstroBro AI vX.Y.Z" --notes "..."`
+4. Update the SHA-256 and the file size shown in `index.html` (`sha256sum AstrobroAI.apk`), then commit
+   and push. The download link itself does not need editing — it's the evergreen alias above, not a
+   version-pinned URL, so step 4 is only the checksum and size now.
+5. Publish the new version code/name in the admin dashboard's **App update** section (Notifications
+   page) so the in-app update screen picks it up. Its APK URL field already defaults to the same
+   evergreen alias, so it only needs editing if you ever rename the asset.
 
 ## Before going live
 Add a support email address to `privacy.html`, `terms.html` and `refund.html` (yellow notice boxes).
