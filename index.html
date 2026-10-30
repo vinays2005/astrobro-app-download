@@ -185,6 +185,46 @@
       border-color: var(--orange);
       box-shadow: 0 8px 24px rgba(234,88,12,.2);
     }
+
+    /* ── DAY PASS (the headline offer) ── */
+    .daypass {
+      position: relative; overflow: hidden;
+      background: var(--grad); color: #fff;
+      border-radius: 20px; padding: 30px 28px;
+      margin-bottom: 34px;
+      display: flex; flex-wrap: wrap; gap: 24px;
+      align-items: center; justify-content: space-between;
+      box-shadow: 0 14px 40px rgba(234,88,12,.28);
+    }
+    .daypass::before {
+      content: '☀'; font-size: 220px; line-height: 1;
+      position: absolute; right: -40px; top: 50%;
+      transform: translateY(-50%);
+      opacity: .10; pointer-events: none;
+    }
+    .daypass-left { position: relative; z-index: 1; min-width: 240px; flex: 1 1 320px; }
+    .daypass-tag {
+      display: inline-block; background: rgba(255,255,255,.22);
+      font-size: 11px; font-weight: 900; letter-spacing: .6px;
+      padding: 5px 12px; border-radius: 100px; margin-bottom: 12px;
+    }
+    .daypass h3 { font-size: clamp(22px,3.4vw,28px); font-weight: 900; margin-bottom: 8px; }
+    .daypass ul { list-style: none; margin: 14px 0 0; padding: 0; }
+    .daypass li { font-size: 14px; margin-bottom: 7px; opacity: .95; }
+    .daypass li::before { content: '✓'; font-weight: 900; margin-right: 9px; }
+    .daypass-right { position: relative; z-index: 1; text-align: center; flex: 0 1 220px; }
+    .daypass-price { font-size: 52px; font-weight: 900; line-height: 1; }
+    .daypass-price span { font-size: 16px; font-weight: 700; opacity: .85; }
+    .daypass-note { font-size: 12px; opacity: .8; margin-top: 8px; line-height: 1.5; }
+    .daypass-cta {
+      display: inline-block; margin-top: 16px;
+      background: #fff; color: var(--orange);
+      padding: 14px 30px; border-radius: 12px;
+      font-weight: 900; font-size: 15px; text-decoration: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,.18);
+      transition: transform .15s;
+    }
+    .daypass-cta:hover { transform: translateY(-2px); }
     .plan-badge {
       position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
       background: var(--grad); color: white;
@@ -257,6 +297,72 @@
     }
     .btn-white:hover { transform: translateY(-2px); }
     .file-note { color: rgba(255,255,255,.6); font-size: 12px; margin-top: 14px; }
+
+
+    /* ── INSTALL GUIDE ── */
+    /* Sideloading is four taps, but two of them are system warnings that look like the phone
+       refusing. People who stall there think the download failed, so the exact on-screen
+       wording is quoted below rather than paraphrased. */
+    .install-guide { max-width: 760px; margin: 0 auto; padding: 72px 24px; }
+    .install-guide h2 { font-size: clamp(24px,4vw,34px); font-weight: 900; text-align: center; }
+    .install-guide .lead { color: var(--text-sec); text-align: center; margin: 10px 0 36px; font-size: 15px; }
+    .ig-step { display: flex; gap: 16px; align-items: flex-start; padding: 18px 0; border-bottom: 1px solid var(--border); }
+    .ig-step:last-of-type { border-bottom: none; }
+    .ig-num {
+      flex: 0 0 34px; width: 34px; height: 34px;
+      background: var(--grad); border-radius: 10px;
+      display: grid; place-items: center;
+      font-size: 15px; font-weight: 900; color: #fff;
+    }
+    .ig-body h3 { font-size: 15px; font-weight: 800; margin-bottom: 5px; }
+    .ig-body p { font-size: 14px; color: var(--text-sec); line-height: 1.6; }
+    .ig-body b { color: var(--text); }
+    .ig-note {
+      margin-top: 26px; padding: 16px 18px;
+      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+      font-size: 13px; color: var(--text-sec); line-height: 1.6;
+    }
+
+    /* ── POST-DOWNLOAD HELPER ── */
+    /* A web page cannot start an Android install: the installer is reachable only from a
+       file the user opens themselves, and "install unknown apps" is granted per source by
+       hand. That is a deliberate security boundary, not a gap to route around. The next best
+       thing is to stop making people hunt for what to do once the file lands, so this opens
+       the moment they tap Download and names the exact buttons Android will show them. */
+    .dl-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(32,18,8,.68);
+      display: none; align-items: center; justify-content: center;
+      padding: 20px; overflow-y: auto;
+    }
+    .dl-overlay.open { display: flex; }
+    .dl-card {
+      background: var(--card); border-radius: 18px;
+      max-width: 420px; width: 100%;
+      padding: 26px 24px 22px; position: relative;
+      box-shadow: 0 24px 60px rgba(0,0,0,.3);
+      max-height: 92vh; overflow-y: auto;
+    }
+    .dl-card h3 { font-size: 19px; font-weight: 900; margin-bottom: 4px; }
+    .dl-card .dl-sub { font-size: 13.5px; color: var(--text-sec); margin-bottom: 18px; line-height: 1.55; }
+    .dl-row { display: flex; gap: 13px; align-items: flex-start; margin-bottom: 15px; }
+    .dl-dot {
+      flex: 0 0 26px; width: 26px; height: 26px; border-radius: 8px;
+      background: var(--grad); color: #fff;
+      display: grid; place-items: center; font-size: 13px; font-weight: 900;
+    }
+    .dl-row p { font-size: 13.5px; line-height: 1.55; color: var(--text-sec); }
+    .dl-row b { color: var(--text); }
+    .dl-close {
+      width: 100%; margin-top: 8px; padding: 13px;
+      border: none; border-radius: 12px; cursor: pointer;
+      background: var(--grad); color: #fff; font-weight: 800; font-size: 14.5px;
+    }
+    .dl-x {
+      position: absolute; top: 12px; right: 14px;
+      background: none; border: none; cursor: pointer;
+      font-size: 22px; line-height: 1; color: var(--text-sec);
+    }
 
     /* ── FOOTER ── */
     footer {
@@ -445,7 +551,26 @@
   <div class="pricing-wrap">
     <div class="section-label">Pricing</div>
     <h2 class="section-title">Affordable plans for every seeker</h2>
-    <p class="section-sub">Start free with 10 AI chats per day. Upgrade when you're ready.</p>
+    <p class="section-sub">Start free with 10 AI chats per day. Try everything for a day for &#8377;10, or pick a plan.</p>
+
+    <div class="daypass">
+      <div class="daypass-left">
+        <span class="daypass-tag">ONE-DAY PASS</span>
+        <h3>Try everything for a day</h3>
+        <ul>
+          <li>Unlimited AI Jyotish chat for 24 hours</li>
+          <li>All 20 divisional charts, D1 to D60</li>
+          <li>Full PDF Kundali reports &mdash; download and keep them</li>
+          <li>Every premium tool unlocked</li>
+        </ul>
+      </div>
+      <div class="daypass-right">
+        <div class="daypass-price">&#8377;10<span> / day</span></div>
+        <div class="daypass-note">One pass per account. Anything you download is yours to keep.</div>
+        <a class="daypass-cta" href="#download">Get the App</a>
+      </div>
+    </div>
+
     <div class="pricing-grid">
 
       <div class="plan-card">
@@ -500,7 +625,7 @@
       <button class="faq-q" onclick="toggleFaq(this)">
         Is Astrobro.ai free to use? <span class="faq-icon">+</span>
       </button>
-      <div class="faq-a">Yes! Astrobro.ai is free to download. Your Kundali, divisional charts and Panchang are free, and you get 10 AI Jyotish chat messages per day. After that you can upgrade — plans start at just ₹49 — for unlimited chat and no ads.</div>
+      <div class="faq-a">Yes! Astrobro.ai is free to download. Your Kundali, divisional charts and Panchang are free, and you get 10 AI Jyotish chat messages per day. Want to see everything before subscribing? The ₹10 one-day pass unlocks unlimited chat, every divisional chart and full PDF reports for 24 hours — one per account. After that, plans start at ₹49.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">
@@ -549,6 +674,71 @@
   <p class="file-note" style="word-break:break-all">SHA-256: <code>76a6274e5a5a451ac56b2998fed6b81c21dd3c348d27915ea62ae21b46b10f7f</code></p>
 </div>
 
+
+<!-- INSTALL GUIDE -->
+<section class="install-guide" id="install-help">
+  <h2>Installing the APK</h2>
+  <p class="lead">Android shows two safety prompts for any app installed outside the Play Store. Both are normal &mdash; here is exactly what you'll see.</p>
+
+  <div class="ig-step">
+    <div class="ig-num">1</div>
+    <div class="ig-body">
+      <h3>Tap Download APK</h3>
+      <p>Your browser may say <b>&ldquo;This type of file can harm your device&rdquo;</b>. That warning appears for every APK. Tap <b>Download anyway</b>.</p>
+    </div>
+  </div>
+
+  <div class="ig-step">
+    <div class="ig-num">2</div>
+    <div class="ig-body">
+      <h3>Open the downloaded file</h3>
+      <p>Tap the download notification, or open <b>Files</b> &rarr; <b>Downloads</b> and tap <b>AstrobroAI.apk</b>.</p>
+    </div>
+  </div>
+
+  <div class="ig-step">
+    <div class="ig-num">3</div>
+    <div class="ig-body">
+      <h3>Allow installs from this source</h3>
+      <p>Android will say <b>&ldquo;your phone is not allowed to install unknown apps from this source&rdquo;</b>. Tap <b>Settings</b>, turn on <b>Allow from this source</b>, then press <b>Back</b>. You only do this once.</p>
+    </div>
+  </div>
+
+  <div class="ig-step">
+    <div class="ig-num">4</div>
+    <div class="ig-body">
+      <h3>Tap Install</h3>
+      <p>If Play Protect says the developer isn't recognised, tap <b>Install anyway</b>. We're not on the Play Store yet, so Google has no record of us.</p>
+    </div>
+  </div>
+
+  <p class="ig-note">
+    <b>Want to check the file first?</b> The SHA-256 checksum is shown with the download button above. If it matches the file you received, it hasn't been altered since we published it.
+    Still stuck? Use the chat button in the corner and tell us which step you're on.
+  </p>
+</section>
+
+
+<!-- POST-DOWNLOAD HELPER -->
+<div class="dl-overlay" id="dlOverlay" role="dialog" aria-modal="true" aria-labelledby="dlTitle">
+  <div class="dl-card">
+    <button class="dl-x" id="dlX" aria-label="Close">&times;</button>
+    <h3 id="dlTitle">Your download has started</h3>
+    <p class="dl-sub" id="dlSub">When it finishes, Android needs two taps from you before the app installs. Here's exactly what you'll see.</p>
+
+    <div class="dl-row"><div class="dl-dot">1</div>
+      <p>Tap the <b>download notification</b> at the top of your screen &mdash; or open <b>Files</b> &rarr; <b>Downloads</b> and tap <b>AstrobroAI.apk</b>.</p></div>
+
+    <div class="dl-row"><div class="dl-dot">2</div>
+      <p>If Android says it <b>&ldquo;is not allowed to install unknown apps&rdquo;</b>, tap <b>Settings</b>, turn on <b>Allow from this source</b>, then press <b>Back</b>.</p></div>
+
+    <div class="dl-row"><div class="dl-dot">3</div>
+      <p>Tap <b>Install</b>. If Play Protect mentions an unknown developer, tap <b>Install anyway</b> &mdash; we're not on the Play Store yet.</p></div>
+
+    <button class="dl-close" id="dlOk">Got it</button>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">☀️ Astrobro.ai</div>
@@ -558,6 +748,7 @@
     <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
     <a href="#download">Download</a>
+    <a href="#install-help">Install Help</a>
     <a href="privacy.html">Privacy Policy</a>
     <a href="terms.html">Terms</a>
     <a href="refund.html">Refunds</a>
@@ -677,7 +868,41 @@
     try {
       fetch('https://astrobro-backend.onrender.com/api/public/downloads/track', { method: 'POST', keepalive: true });
     } catch (_) {}
+    showDownloadHelp();
   }
+
+  // The browser gives a page no event for "this download finished", and no way to hand the
+  // file to Android's installer even if it did — installing is gated behind the user opening
+  // the file and granting this source permission by hand. So rather than pretend, the helper
+  // opens as soon as the download starts and names the buttons Android is about to show.
+  function showDownloadHelp() {
+    var el = document.getElementById('dlOverlay');
+    if (!el) return;
+    var android = /android/i.test(navigator.userAgent);
+    if (!android) {
+      document.getElementById('dlTitle').textContent = 'Downloading the Android app';
+      document.getElementById('dlSub').textContent =
+        "Astrobro.ai is an Android app, so the file you're downloading installs on a phone, not on this computer. " +
+        'Move it to your Android phone, then follow these steps there.';
+    }
+    setTimeout(function () { el.classList.add('open'); }, 900);
+  }
+
+  function hideDownloadHelp() {
+    var el = document.getElementById('dlOverlay');
+    if (el) el.classList.remove('open');
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var ok = document.getElementById('dlOk');
+    var x = document.getElementById('dlX');
+    var ov = document.getElementById('dlOverlay');
+    if (ok) ok.addEventListener('click', hideDownloadHelp);
+    if (x) x.addEventListener('click', hideDownloadHelp);
+    // Tapping the dimmed area closes it; tapping the card itself must not.
+    if (ov) ov.addEventListener('click', function (e) { if (e.target === ov) hideDownloadHelp(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideDownloadHelp(); });
+  });
 
   // One count per page load, for the admin dashboard's "Website visits" card.
   try {
